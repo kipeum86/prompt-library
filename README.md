@@ -10,8 +10,8 @@ Static prompt library for GitHub Pages backed by Google Sheets.
 
 ## Data source
 
-- Spreadsheet ID: `1-dPPadblXmXvW5V68gW5ENp9wdWxC3P3II6ZV0liRbg`
-- Google Sheets source: <https://docs.google.com/spreadsheets/d/1-dPPadblXmXvW5V68gW5ENp9wdWxC3P3II6ZV0liRbg/edit?gid=1502618237#gid=1502618237>
+- Spreadsheet ID: `1FP11gpL9_HpbfU_NXkZQ_tQgqtbm8aUAP27E2GJj564`
+- Google Sheets source: <https://docs.google.com/spreadsheets/d/1FP11gpL9_HpbfU_NXkZQ_tQgqtbm8aUAP27E2GJj564/edit?gid=1502618237#gid=1502618237>
 
 ## Deploy
 
