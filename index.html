@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KP's Prompt Library</title>
+  <meta
+    name="description"
+    content="Google Sheets로 관리하는 프롬프트 라이브러리를 검색, 복사, 즐겨찾기 중심으로 탐색하는 정적 웹 앱"
+  >
+  <meta name="color-scheme" content="dark light">
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2307111a'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%2356f0c4'%3EKP%3C/text%3E%3C/svg%3E"
+  >
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/subsets/Paperlogy-dynamic-subset.css"
+    type="text/css"
+  >
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero panel">
+      <div class="hero-top">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">KP</div>
+          <div class="brand-copy">
+            <p class="eyebrow">Google Sheets + GitHub Pages</p>
+            <h1 class="brand-title">KP's Prompt Library</h1>
+            <p class="brand-subtitle">
+              약 320개의 프롬프트와 Custom GPTs를 검색, 복사, 즐겨찾기 중심으로 탐색하는
+              정적 웹 앱.
+            </p>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a
+            class="link-button"
+            href="https://github.com/kipeum86/prompt-library"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            GitHub
+          </a>
+          <a
+            class="link-button"
+            href="https://docs.google.com/spreadsheets/d/1-dPPadblXmXvW5V68gW5ENp9wdWxC3P3II6ZV0liRbg/edit?gid=1502618237#gid=1502618237"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Google Sheets
+          </a>
+          <button id="theme-toggle" class="icon-toggle" type="button" aria-label="라이트 모드로 전환" title="라이트 모드로 전환">
+            ☀
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-main">
+        <div>
+          <p class="eyebrow">Search, copy, save</p>
+          <p class="brand-subtitle">
+            검색은 모든 카테고리를 대상으로 동작하고, 즐겨찾기와 테마/뷰 상태는 로컬에
+            저장됩니다. 데이터는 Google Sheets에서 직접 가져옵니다.
+          </p>
+        </div>
+
+        <div id="hero-stats" class="stat-grid" aria-live="polite"></div>
+      </div>
+    </header>
+
+    <section class="toolbar panel" aria-label="검색 및 필터">
+      <div class="toolbar-top">
+        <label class="search-shell" for="search-input">
+          <span class="search-label">Search</span>
+          <input
+            id="search-input"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="프롬프트, 설명, GPT 이름, 본문 검색"
+          >
+          <button id="search-clear" class="ghost-button ghost-button--icon" type="button" aria-label="검색어 지우기" title="검색어 지우기" hidden>
+            ×
+          </button>
+        </label>
+
+        <div class="toolbar-actions">
+          <div class="segmented" role="group" aria-label="뷰 전환">
+            <button id="view-card" class="secondary-button" type="button" data-view="card">Card</button>
+            <button id="view-list" class="secondary-button" type="button" data-view="list">List</button>
+          </div>
+
+          <label class="select-shell" for="sort-select">
+            <span>정렬</span>
+            <select id="sort-select">
+              <option value="default">기본</option>
+              <option value="title">이름순</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div id="category-tabs" class="category-tabs" role="tablist" aria-label="카테고리"></div>
+
+      <div class="toolbar-bottom">
+        <div id="results-summary" class="results-summary">데이터를 불러오는 중입니다...</div>
+        <div id="sub-summary" class="sub-summary"></div>
+      </div>
+    </section>
+
+    <section id="status-banner" class="status-banner" aria-live="polite"></section>
+
+    <main id="content-root" class="content-root" aria-live="polite"></main>
+
+    <footer class="footer">
+      <span>© 2023-2026 Kipeum Lee. All rights reserved.</span>
+      <span>Google Sheets 반영에는 최대 5분 정도 지연이 있을 수 있습니다.</span>
+    </footer>
+  </div>
+
+  <button id="scroll-top" class="scroll-top" type="button" aria-label="맨 위로 이동" title="맨 위로 이동">↑</button>
+
+  <div id="modal-root" class="modal-root" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button id="modal-close" class="modal-close" type="button" aria-label="닫기">×</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
