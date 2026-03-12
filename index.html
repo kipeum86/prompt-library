@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
     name="description"
     content="Google Sheets로 관리하는 프롬프트 라이브러리를 검색, 복사, 즐겨찾기 중심으로 탐색하는 정적 웹 앱"
   >
-  <meta name="color-scheme" content="dark light">
+  <meta name="color-scheme" content="light dark">
   <link
     rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2307111a'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%2356f0c4'%3EKP%3C/text%3E%3C/svg%3E"
@@ -41,7 +41,7 @@
         <div class="hero-actions">
           <a
             class="link-button"
-            href="https://github.com/kipeum86/prompt-library"
+            href="https://github.com/kipeum86"
             target="_blank"
             rel="noreferrer noopener"
           >
@@ -49,14 +49,14 @@
           </a>
           <a
             class="link-button"
-            href="https://docs.google.com/spreadsheets/d/1-dPPadblXmXvW5V68gW5ENp9wdWxC3P3II6ZV0liRbg/edit?gid=1502618237#gid=1502618237"
+            href="https://www.linkedin.com/in/kipeumlee/"
             target="_blank"
             rel="noreferrer noopener"
           >
-            Google Sheets
+            LinkedIn
           </a>
-          <button id="theme-toggle" class="icon-toggle" type="button" aria-label="라이트 모드로 전환" title="라이트 모드로 전환">
-            ☀
+          <button id="theme-toggle" class="icon-toggle" type="button" aria-label="다크 모드로 전환" title="다크 모드로 전환">
+            ☾
           </button>
         </div>
       </div>
@@ -77,7 +77,12 @@
     <section class="toolbar panel" aria-label="검색 및 필터">
       <div class="toolbar-top">
         <label class="search-shell" for="search-input">
-          <span class="search-label">Search</span>
+          <span class="search-label" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
           <input
             id="search-input"
             type="search"

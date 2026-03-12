@@ -1,7 +1,7 @@
 const CONFIG = {
-  SPREADSHEET_ID: '1-dPPadblXmXvW5V68gW5ENp9wdWxC3P3II6ZV0liRbg',
+  SPREADSHEET_ID: '1FP11gpL9_HpbfU_NXkZQ_tQgqtbm8aUAP27E2GJj564',
   SHEET_SOURCE_URL:
-    'https://docs.google.com/spreadsheets/d/1-dPPadblXmXvW5V68gW5ENp9wdWxC3P3II6ZV0liRbg/edit?gid=1502618237#gid=1502618237',
+    'https://docs.google.com/spreadsheets/d/1FP11gpL9_HpbfU_NXkZQ_tQgqtbm8aUAP27E2GJj564/edit?gid=1502618237#gid=1502618237',
   CACHE_DURATION_MS: 5 * 60 * 1000,
   SEARCH_DEBOUNCE_MS: 300,
   TOAST_DURATION_MS: 2000,
@@ -13,7 +13,6 @@ const CONFIG = {
     { key: '4o-image', gid: '1770278489', label: '4o Image', kind: 'prompt', accent: '#f79be7', accentSoft: 'rgba(247, 155, 231, 0.18)' },
     { key: 'research', gid: '1502618237', label: 'Research', kind: 'prompt', accent: '#9bb2ff', accentSoft: 'rgba(155, 178, 255, 0.18)' },
     { key: 'dashboard', gid: '850880156', label: 'Dashboard', kind: 'prompt', accent: '#63e1ff', accentSoft: 'rgba(99, 225, 255, 0.18)' },
-    { key: 'custom-gpts', gid: '1577256108', label: 'Custom GPTs', kind: 'custom-gpt', accent: '#b89dff', accentSoft: 'rgba(184, 157, 255, 0.18)' },
   ],
 };
 
@@ -35,7 +34,7 @@ const state = {
   items: [],
   activeCategory: CONFIG.SHEETS[0].key,
   favorites: new Set(readStoredArray(STORAGE_KEYS.favorites)),
-  theme: readStoredString(STORAGE_KEYS.theme, 'dark') === 'light' ? 'light' : 'dark',
+  theme: readStoredString(STORAGE_KEYS.theme, 'light') === 'dark' ? 'dark' : 'light',
   viewMode: readStoredString(STORAGE_KEYS.viewMode, 'card') === 'list' ? 'list' : 'card',
   sortMode: readStoredString(STORAGE_KEYS.sortMode, 'default') === 'title' ? 'title' : 'default',
   query: '',
