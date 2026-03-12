@@ -13,6 +13,7 @@ const CONFIG = {
     { key: '4o-image', gid: '1770278489', label: '4o Image', kind: 'prompt', accent: '#f79be7', accentSoft: 'rgba(247, 155, 231, 0.18)' },
     { key: 'research', gid: '1502618237', label: 'Research', kind: 'prompt', accent: '#9bb2ff', accentSoft: 'rgba(155, 178, 255, 0.18)' },
     { key: 'dashboard', gid: '850880156', label: 'Dashboard', kind: 'prompt', accent: '#63e1ff', accentSoft: 'rgba(99, 225, 255, 0.18)' },
+    { key: 'agent-builder', gid: '1198339301', label: 'Agent Builder', kind: 'prompt', accent: '#a78bfa', accentSoft: 'rgba(167, 139, 250, 0.18)' },
   ],
 };
 
