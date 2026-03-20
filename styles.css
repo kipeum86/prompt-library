@@ -399,6 +399,41 @@ button {
   min-width: 94px;
 }
 
+.category-tabs-wrap {
+  position: relative;
+}
+
+.category-tabs-wrap::before,
+.category-tabs-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 1px;
+  width: 40px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.category-tabs-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--surface), transparent);
+}
+
+.category-tabs-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--surface), transparent);
+}
+
+.category-tabs-wrap.fade-left::before {
+  opacity: 1;
+}
+
+.category-tabs-wrap.fade-right::after {
+  opacity: 1;
+}
+
 .category-tabs {
   display: flex;
   gap: 0;

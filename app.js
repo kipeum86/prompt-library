@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme();
   syncControlState();
   initTipBar();
+  initTabScrollFade();
   render();
   boot();
 });
@@ -1171,6 +1172,22 @@ function readStoredArray(key) {
   } catch (error) {
     return [];
   }
+}
+
+function initTabScrollFade() {
+  const tabs = elements.categoryTabs;
+  const wrap = tabs.parentElement;
+
+  function updateFade() {
+    const canScrollLeft = tabs.scrollLeft > 2;
+    const canScrollRight = tabs.scrollLeft + tabs.clientWidth < tabs.scrollWidth - 2;
+    wrap.classList.toggle('fade-left', canScrollLeft);
+    wrap.classList.toggle('fade-right', canScrollRight);
+  }
+
+  tabs.addEventListener('scroll', updateFade, { passive: true });
+  window.addEventListener('resize', updateFade, { passive: true });
+  updateFade();
 }
 
 function initTipBar() {
