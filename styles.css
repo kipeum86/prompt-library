@@ -1031,6 +1031,19 @@ button {
   padding-right: 56px;
 }
 
+.modal-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.modal-position {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
 .modal-title {
   margin: 0;
   font-size: clamp(1.45rem, 1.1rem + 0.7vw, 2.15rem);

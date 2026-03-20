@@ -145,6 +145,16 @@ function bindEvents() {
     }
   });
 
+  elements.modalRoot.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      navigateModal(-1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      navigateModal(1);
+    }
+  });
+
   elements.modalRoot.addEventListener('close', () => {
     state.modalId = null;
     renderModal();
@@ -798,11 +808,26 @@ function renderModal() {
   }
 
   const isFavorite = state.favorites.has(item.id);
+  const entries = getVisibleEntries();
+  const currentIndex = entries.findIndex((e) => e.item.id === item.id);
+  const totalCount = entries.length;
+  const hasPrev = totalCount > 1;
+  const hasNext = totalCount > 1;
+
+  const navBar = totalCount > 1 ? `
+    <div class="modal-nav">
+      <button class="icon-button" type="button" data-action="modal-prev" aria-label="Previous prompt" ${!hasPrev ? 'disabled' : ''}>&#8592;</button>
+      <span class="modal-position">${currentIndex + 1} of ${totalCount}</span>
+      <button class="icon-button" type="button" data-action="modal-next" aria-label="Next prompt" ${!hasNext ? 'disabled' : ''}>&#8594;</button>
+    </div>
+  ` : '';
+
   const header = `
     <div class="modal-top">
       <span class="number-badge">#${escapeHtml(item.displayNumber)}</span>
       <span class="category-pill" style="--card-accent:${item.accent}; --card-soft:${item.accentSoft};">${escapeHtml(item.category)}</span>
       <span class="type-badge">${item.type === 'custom-gpt' ? 'Custom GPT' : 'Prompt'}</span>
+      ${navBar}
     </div>
     <h2 id="modal-title" class="modal-title">${escapeHtml(item.title)}</h2>
     ${item.type === 'custom-gpt'
@@ -933,6 +958,11 @@ function runAction(action, itemId, actionButton) {
     elements.searchClear.hidden = true;
     state.query = '';
     render();
+    return;
+  }
+
+  if (action === 'modal-prev' || action === 'modal-next') {
+    navigateModal(action === 'modal-next' ? 1 : -1);
     return;
   }
 
@@ -1241,6 +1271,18 @@ function initTipBar() {
     elements.tipBar.hidden = true;
     localStorage.setItem(STORAGE_KEYS.tipDismissed, '1');
   });
+}
+
+function navigateModal(direction) {
+  const entries = getVisibleEntries();
+  if (entries.length === 0) {
+    return;
+  }
+  const currentIndex = entries.findIndex((e) => e.item.id === state.modalId);
+  const nextIndex = (currentIndex + direction + entries.length) % entries.length;
+  const nextItem = entries[nextIndex].item;
+  state.modalId = nextItem.id;
+  window.location.hash = `#${nextItem.key}/${nextItem.id}`;
 }
 
 function navigateTo(category, modalId) {
