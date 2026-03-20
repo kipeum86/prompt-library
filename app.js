@@ -121,7 +121,11 @@ function bindEvents() {
     if (!button) {
       return;
     }
-    state.activeCategory = button.dataset.category;
+    navigateTo(button.dataset.category);
+  });
+
+  window.addEventListener('hashchange', () => {
+    applyHash();
     render();
   });
 
@@ -181,6 +185,7 @@ async function boot(forceRefresh = false) {
     }
     state.loading = false;
     state.error = null;
+    applyHash();
     render();
   } catch (error) {
     state.loading = false;
@@ -917,15 +922,16 @@ function runAction(action, itemId) {
 
 function openModal(itemId) {
   state.modalTrigger = document.activeElement;
-  state.modalId = itemId;
-  renderModal();
+  const item = state.items.find((entry) => entry.id === itemId);
+  if (item) {
+    window.location.hash = `#${item.key}/${itemId}`;
+  }
 }
 
 function closeModal() {
   const trigger = state.modalTrigger;
-  state.modalId = null;
   state.modalTrigger = null;
-  renderModal();
+  window.location.hash = `#${state.activeCategory}`;
   if (trigger && typeof trigger.focus === 'function') {
     trigger.focus();
   }
@@ -1154,6 +1160,37 @@ function readStoredArray(key) {
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
     return [];
+  }
+}
+
+function navigateTo(category, modalId) {
+  if (modalId) {
+    window.location.hash = `#${category}/${modalId}`;
+  } else {
+    window.location.hash = `#${category}`;
+  }
+}
+
+function applyHash() {
+  try {
+    const raw = decodeURIComponent(window.location.hash.slice(1));
+    const parts = raw.split('/');
+    const category = parts[0] || '';
+    const modalId = parts[1] || '';
+
+    const validCategories = new Set([FAVORITES_TAB_KEY, ...CONFIG.SHEETS.map((s) => s.key)]);
+    if (category && validCategories.has(category)) {
+      state.activeCategory = category;
+    }
+
+    if (modalId && state.items.some((item) => item.id === modalId)) {
+      state.modalTrigger = document.activeElement;
+      state.modalId = modalId;
+    } else {
+      state.modalId = null;
+    }
+  } catch (error) {
+    // Malformed hash — ignore
   }
 }
 
