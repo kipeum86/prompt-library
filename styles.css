@@ -534,18 +534,10 @@ button {
 .prompt-card:focus-visible,
 .list-row:hover,
 .list-row:focus-visible {
-  transform: translateY(-4px);
-  border-color: var(--border-strong);
+  border-left-width: 4px;
   border-left-color: var(--card-accent, var(--accent));
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+  background: color-mix(in srgb, var(--surface) 94%, var(--card-accent, var(--accent)));
   outline: 0;
-}
-
-html[data-theme="dark"] .prompt-card:hover,
-html[data-theme="dark"] .prompt-card:focus-visible,
-html[data-theme="dark"] .list-row:hover,
-html[data-theme="dark"] .list-row:focus-visible {
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
 }
 
 .prompt-card::before,
