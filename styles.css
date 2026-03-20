@@ -52,6 +52,23 @@ html[data-theme="dark"] {
   border: 0;
 }
 
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 100;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+  transition: top 180ms ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
 html {
   scroll-behavior: smooth;
 }
