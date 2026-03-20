@@ -358,25 +358,17 @@ function render() {
 }
 
 function renderHeroStats() {
-  const promptCount = state.items.filter((item) => item.type === 'prompt').length;
+  const promptCount = state.loading ? '...' : state.items.filter((item) => item.type === 'prompt').length;
   const favoriteCount = countExistingFavorites();
-  const visibleCount = state.loading ? '...' : String(getVisibleEntries().length);
+  const viewLabel = state.viewMode === 'card' ? 'Card' : 'List';
 
-  const stats = [
-    { label: 'Prompts', value: state.loading ? '...' : promptCount, note: 'Google Sheets 원본과 5분 캐시 기준 동기화' },
-    { label: 'Favorites', value: favoriteCount, note: '브라우저 localStorage에 저장' },
-    { label: 'Visible', value: visibleCount, note: `${state.viewMode === 'card' ? 'Card' : 'List'} view · ${state.theme} theme` },
-  ];
-
-  elements.heroStats.innerHTML = stats
-    .map((stat) => `
-      <div class="stat-card">
-        <span class="stat-label">${escapeHtml(stat.label)}</span>
-        <strong class="stat-value">${escapeHtml(String(stat.value))}</strong>
-        <span class="stat-note">${escapeHtml(stat.note)}</span>
-      </div>
-    `)
-    .join('');
+  elements.heroStats.innerHTML = `
+    <span class="stat-inline">${escapeHtml(String(promptCount))} prompts</span>
+    <span class="stat-sep" aria-hidden="true">&middot;</span>
+    <span class="stat-inline">${escapeHtml(String(favoriteCount))} favorites</span>
+    <span class="stat-sep" aria-hidden="true">&middot;</span>
+    <span class="stat-inline">${escapeHtml(viewLabel)} view</span>
+  `;
 }
 
 function renderTabs() {
