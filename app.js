@@ -44,6 +44,7 @@ const state = {
   error: null,
   warnings: [],
   modalId: null,
+  modalTrigger: null,
 };
 
 const elements = {};
@@ -130,9 +131,14 @@ function bindEvents() {
   elements.modalBody.addEventListener('error', handleImageError, true);
 
   elements.modalRoot.addEventListener('click', (event) => {
-    if (event.target === elements.modalRoot || event.target.hasAttribute('data-close-modal')) {
+    if (event.target === elements.modalRoot) {
       closeModal();
     }
+  });
+
+  elements.modalRoot.addEventListener('close', () => {
+    state.modalId = null;
+    renderModal();
   });
 
   elements.modalClose.addEventListener('click', closeModal);
@@ -144,11 +150,6 @@ function bindEvents() {
   window.addEventListener('scroll', updateScrollButton, { passive: true });
 
   window.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && state.modalId) {
-      closeModal();
-      return;
-    }
-
     if (
       event.key === '/' &&
       !event.metaKey &&
@@ -749,7 +750,9 @@ function renderCustomGptListRow(item, tokens, isFavorite) {
 
 function renderModal() {
   if (!state.modalId) {
-    elements.modalRoot.hidden = true;
+    if (elements.modalRoot.open) {
+      elements.modalRoot.close();
+    }
     elements.body.classList.remove('is-modal-open');
     elements.modalBody.innerHTML = '';
     return;
@@ -795,8 +798,10 @@ function renderModal() {
     : `<section class="modal-section"><h3 class="section-title">Prompt</h3><div class="prompt-block"><pre>${escapeHtml(item.prompt)}</pre></div></section>`;
 
   elements.modalBody.innerHTML = `${header}${actions}${body}${item.type === 'prompt' ? renderModalResources(item.sample) : ''}`;
-  elements.modalRoot.hidden = false;
-  elements.body.classList.add('is-modal-open');
+  if (!elements.modalRoot.open) {
+    elements.modalRoot.showModal();
+    elements.body.classList.add('is-modal-open');
+  }
 }
 
 function renderModalResources(sample) {
@@ -919,13 +924,19 @@ function runAction(action, itemId) {
 }
 
 function openModal(itemId) {
+  state.modalTrigger = document.activeElement;
   state.modalId = itemId;
   renderModal();
 }
 
 function closeModal() {
+  const trigger = state.modalTrigger;
   state.modalId = null;
+  state.modalTrigger = null;
   renderModal();
+  if (trigger && typeof trigger.focus === 'function') {
+    trigger.focus();
+  }
 }
 
 function toggleFavorite(itemId) {
