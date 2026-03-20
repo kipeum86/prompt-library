@@ -1,3 +1,5 @@
+// === CONFIG ===
+
 const CONFIG = {
   SPREADSHEET_ID: '1FP11gpL9_HpbfU_NXkZQ_tQgqtbm8aUAP27E2GJj564',
   SHEET_SOURCE_URL:
@@ -32,6 +34,8 @@ const IMAGE_PATTERN = /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i;
 const collator = new Intl.Collator('ko', { numeric: true, sensitivity: 'base' });
 const metaByKey = new Map(CONFIG.SHEETS.map((sheet, index) => [sheet.key, { ...sheet, order: index }]));
 
+// === STATE ===
+
 const state = {
   items: [],
   activeCategory: CONFIG.SHEETS[0].key,
@@ -47,6 +51,8 @@ const state = {
   modalId: null,
   modalTrigger: null,
 };
+
+// === DOM CACHE & EVENTS ===
 
 const elements = {};
 
@@ -183,6 +189,8 @@ function bindEvents() {
     }
   });
 }
+
+// === DATA FETCH ===
 
 async function boot(forceRefresh = false) {
   state.loading = true;
@@ -366,6 +374,10 @@ function parseSampleContent(raw) {
     text: urls.length ? value.replace(URL_PATTERN, ' ').replace(/\s+/g, ' ').trim() : value,
   };
 }
+
+// === RENDERING ===
+// NOTE: render() rebuilds the entire DOM on every state change.
+// For ~100 items this is well under 16ms. Revisit if dataset grows past 500.
 
 function render() {
   syncControlState();
@@ -923,6 +935,8 @@ function handleImageError(event) {
   event.target.remove();
 }
 
+// === ACTIONS ===
+
 function handleContentClick(event) {
   const actionButton = event.target.closest('[data-action]');
   if (actionButton) {
@@ -1286,6 +1300,8 @@ function initTipBar() {
   });
 }
 
+// === ROUTING ===
+
 function navigateModal(direction) {
   const entries = getVisibleEntries();
   if (entries.length === 0) {
@@ -1336,6 +1352,8 @@ function readStoredString(key, fallback) {
     return fallback;
   }
 }
+
+// === UTILITIES ===
 
 function debounce(callback, wait) {
   let timeoutId = 0;
