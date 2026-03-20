@@ -512,19 +512,50 @@ function renderErrorMarkup(message) {
 
 function renderEmptyMarkup() {
   const isFavorites = state.activeCategory === FAVORITES_TAB_KEY && !state.query;
+  const isSearch = !!state.query;
+
+  if (isSearch) {
+    const tokens = queryTokens();
+    const suggestion = tokens.length > 1 ? escapeHtml(tokens.slice(0, -1).join(' ')) : '';
+    const topCategories = CONFIG.SHEETS.slice(0, 3)
+      .map((s) => `<button class="secondary-button" type="button" data-category="${s.key}" data-action="navigate">${escapeHtml(s.label)}</button>`)
+      .join('');
+    return `
+      <section class="empty-shell">
+        <h2 class="empty-title">No results for "${escapeHtml(state.query)}"</h2>
+        <p class="empty-copy">
+          ${suggestion ? `Try searching for "${suggestion}" instead, or browse a category:` : 'Try a shorter search term, or browse a category:'}
+        </p>
+        <div class="empty-actions">
+          <button class="primary-button" type="button" data-action="clear-search">Clear search</button>
+          ${topCategories}
+        </div>
+      </section>
+    `;
+  }
+
+  if (isFavorites) {
+    const topCategories = CONFIG.SHEETS.slice(0, 3)
+      .map((s) => {
+        const count = state.items.filter((item) => item.key === s.key).length;
+        return `<button class="secondary-button" type="button" data-category="${s.key}" data-action="navigate">${escapeHtml(s.label)} (${count})</button>`;
+      })
+      .join('');
+    return `
+      <section class="empty-shell">
+        <h2 class="empty-title">No favorites yet.</h2>
+        <p class="empty-copy">Click ☆ on any prompt to save it here. Start exploring:</p>
+        <div class="empty-actions">
+          ${topCategories}
+        </div>
+      </section>
+    `;
+  }
+
   return `
     <section class="empty-shell">
-      <h2 class="empty-title">${isFavorites ? 'No favorites yet.' : 'No prompts found.'}</h2>
-      <p class="empty-copy">
-        ${
-          isFavorites
-            ? 'Click ☆ to save prompts and they will appear here.'
-            : 'Try a different search or switch categories.'
-        }
-      </p>
-      <div class="empty-actions">
-        ${state.query ? '<button class="primary-button" type="button" data-action="clear-search">Clear search</button>' : ''}
-      </div>
+      <h2 class="empty-title">No prompts found.</h2>
+      <p class="empty-copy">Try a different search or switch categories.</p>
     </section>
   `;
 }
@@ -858,7 +889,7 @@ function handleContentClick(event) {
   const actionButton = event.target.closest('[data-action]');
   if (actionButton) {
     event.preventDefault();
-    runAction(actionButton.dataset.action, actionButton.dataset.itemId);
+    runAction(actionButton.dataset.action, actionButton.dataset.itemId, actionButton);
     return;
   }
 
@@ -890,7 +921,7 @@ function handleContentKeydown(event) {
   openModal(card.dataset.itemId);
 }
 
-function runAction(action, itemId) {
+function runAction(action, itemId, actionButton) {
   if (action === 'retry') {
     clearSessionCache();
     boot(true);
@@ -902,6 +933,17 @@ function runAction(action, itemId) {
     elements.searchClear.hidden = true;
     state.query = '';
     render();
+    return;
+  }
+
+  if (action === 'navigate' && actionButton) {
+    const category = actionButton.dataset.category;
+    if (category) {
+      state.query = '';
+      elements.searchInput.value = '';
+      elements.searchClear.hidden = true;
+      navigateTo(category);
+    }
     return;
   }
 
