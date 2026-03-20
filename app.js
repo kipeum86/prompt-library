@@ -81,6 +81,7 @@ function cacheElements() {
   elements.modalClose = document.getElementById('modal-close');
   elements.toastRoot = document.getElementById('toast-root');
   elements.scrollTop = document.getElementById('scroll-top');
+  elements.srAnnounce = document.getElementById('sr-announce');
   elements.tipBar = document.getElementById('tip-bar');
   elements.tipDismiss = document.getElementById('tip-dismiss');
 }
@@ -423,6 +424,13 @@ function renderTabs() {
     .join('');
 }
 
+function announce(message) {
+  elements.srAnnounce.textContent = '';
+  window.requestAnimationFrame(() => {
+    elements.srAnnounce.textContent = message;
+  });
+}
+
 function renderSummary() {
   if (state.loading) {
     elements.resultsSummary.textContent =
@@ -439,22 +447,27 @@ function renderSummary() {
 
   const visibleEntries = getVisibleEntries();
   if (state.query) {
-    elements.resultsSummary.textContent = `${visibleEntries.length} results for '${state.query}'`;
+    const msg = `${visibleEntries.length} results for '${state.query}'`;
+    elements.resultsSummary.textContent = msg;
     elements.subSummary.textContent = '검색은 현재 탭과 무관하게 전체 카테고리를 대상으로 수행됩니다.';
+    announce(msg);
     return;
   }
 
   if (state.activeCategory === FAVORITES_TAB_KEY) {
-    elements.resultsSummary.textContent = `Favorites ${visibleEntries.length}개`;
+    const msg = `Favorites ${visibleEntries.length}개`;
+    elements.resultsSummary.textContent = msg;
     elements.subSummary.textContent = '즐겨찾기 상태는 현재 브라우저에만 저장됩니다.';
+    announce(msg);
     return;
   }
 
   const meta = metaByKey.get(state.activeCategory);
-  elements.resultsSummary.textContent =
-    `${meta.label} · ${visibleEntries.length} ${meta.kind === 'custom-gpt' ? 'GPTs' : 'prompts'}`;
+  const msg = `${meta.label} · ${visibleEntries.length} ${meta.kind === 'custom-gpt' ? 'GPTs' : 'prompts'}`;
+  elements.resultsSummary.textContent = msg;
   elements.subSummary.textContent =
     state.sortMode === 'title' ? '현재 이름순 정렬입니다.' : '현재 시트 원래 순서를 유지합니다.';
+  announce(msg);
 }
 
 function renderStatusBanner() {
