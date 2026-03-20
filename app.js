@@ -22,6 +22,7 @@ const STORAGE_KEYS = {
   theme: 'kp-prompt-theme',
   viewMode: 'kp-prompt-view',
   sortMode: 'kp-prompt-sort',
+  tipDismissed: 'kp-prompt-tip-dismissed',
 };
 
 const CACHE_PREFIX = 'kp-prompt-sheet-cache-v1';
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bindEvents();
   applyTheme();
   syncControlState();
+  initTipBar();
   render();
   boot();
 });
@@ -78,6 +80,8 @@ function cacheElements() {
   elements.modalClose = document.getElementById('modal-close');
   elements.toastRoot = document.getElementById('toast-root');
   elements.scrollTop = document.getElementById('scroll-top');
+  elements.tipBar = document.getElementById('tip-bar');
+  elements.tipDismiss = document.getElementById('tip-dismiss');
 }
 
 function bindEvents() {
@@ -1167,6 +1171,17 @@ function readStoredArray(key) {
   } catch (error) {
     return [];
   }
+}
+
+function initTipBar() {
+  if (readStoredString(STORAGE_KEYS.tipDismissed, '') === '1') {
+    return;
+  }
+  elements.tipBar.hidden = false;
+  elements.tipDismiss.addEventListener('click', () => {
+    elements.tipBar.hidden = true;
+    localStorage.setItem(STORAGE_KEYS.tipDismissed, '1');
+  });
 }
 
 function navigateTo(category, modalId) {

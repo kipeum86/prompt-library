@@ -476,6 +476,33 @@ button {
   line-height: 1.5;
 }
 
+.tip-bar {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--accent-soft);
+  background: var(--accent-soft);
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tip-bar[hidden] {
+  display: none;
+}
+
+.tip-bar kbd {
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
 .status-banner {
   display: none;
   margin-top: 18px;
