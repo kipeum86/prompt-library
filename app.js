@@ -964,11 +964,17 @@ function copyToClipboard(text, message) {
       textarea.style.left = '-9999px';
       document.body.appendChild(textarea);
       textarea.select();
-      document.execCommand('copy');
+      const ok = document.execCommand('copy');
       document.body.removeChild(textarea);
+      if (!ok) {
+        throw new Error('execCommand copy failed');
+      }
     })
-    .finally(() => {
+    .then(() => {
       showToast(message);
+    })
+    .catch(() => {
+      showToast('Copy failed — try selecting the text manually.');
     });
 }
 
