@@ -615,6 +615,15 @@ body[data-mode="mobile"] .reader-back {
   display: block;
 }
 
+.reader-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
 .reader-eyebrow {
   display: flex;
   flex-wrap: wrap;
@@ -625,7 +634,10 @@ body[data-mode="mobile"] .reader-back {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-55);
-  margin-bottom: 18px;
+}
+
+.reader-topbar .reader-actions {
+  flex-shrink: 0;
 }
 .reader-eyebrow-dot { color: var(--ink-25); }
 
@@ -750,11 +762,11 @@ body[data-mode="mobile"] .reader-back {
 
 .reader-footer {
   margin-top: auto;
-  padding-top: 32px;
+  padding-top: 28px;
   border-top: 1px solid var(--rule);
   display: flex;
   gap: 24px;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-end;
   flex-wrap: wrap;
 }
@@ -793,10 +805,17 @@ body[data-mode="mobile"] .reader-back {
   flex-wrap: wrap;
 }
 
+.reader-topbar .btn {
+  padding: 8px 14px;
+  font-size: 12.5px;
+  min-height: 36px;
+}
+
 .btn {
   padding: 12px 22px;
   font-family: var(--f-ui);
   font-size: 13px;
+  font-weight: 500;
   border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
@@ -928,12 +947,19 @@ body[data-mode="mobile"] .reader-footer {
   gap: 20px;
 }
 
-body[data-mode="mobile"] .reader-actions {
+body[data-mode="mobile"] .reader-topbar {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+body[data-mode="mobile"] .reader-topbar .reader-actions {
   justify-content: stretch;
 }
-body[data-mode="mobile"] .reader-actions .btn {
+body[data-mode="mobile"] .reader-topbar .btn {
   flex: 1;
   justify-content: center;
+  padding: 10px 14px;
+  min-height: 44px;
 }
 
 @media (prefers-reduced-motion: reduce) {

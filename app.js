@@ -614,12 +614,34 @@ function renderReader() {
     ? CONFIG.LEDE_FALLBACK
     : (item.author ? `by ${item.author}.` : CONFIG.LEDE_FALLBACK);
 
-  const eyebrow = `
-    <div class="reader-eyebrow">
-      <span>№ ${escapeHtml(padNumber(item.displayNumber))}</span>
-      <span class="reader-eyebrow-dot">·</span>
-      <span>${escapeHtml(item.category)}</span>
-      ${!isPrompt ? '<span class="reader-eyebrow-dot">·</span><span>Custom GPT</span>' : ''}
+  const primaryAction = isPrompt
+    ? `<button class="btn btn-primary" type="button" data-action="copy" data-item-id="${escapeAttribute(item.id)}">Copy prompt →</button>`
+    : (item.link
+      ? `<a class="btn btn-primary" href="${escapeAttribute(item.link)}" target="_blank" rel="noreferrer noopener">Open in ChatGPT →</a>`
+      : `<button class="btn btn-primary" type="button" disabled>Link unavailable</button>`);
+
+  const saveAction = `
+    <button
+      class="btn btn-ghost ${isFav ? 'active' : ''}"
+      type="button"
+      data-action="favorite"
+      data-item-id="${escapeAttribute(item.id)}"
+      aria-pressed="${isFav}"
+    >${isFav ? '♥ Saved' : '♡ Save'}</button>
+  `;
+
+  const topbar = `
+    <div class="reader-topbar">
+      <div class="reader-eyebrow">
+        <span>№ ${escapeHtml(padNumber(item.displayNumber))}</span>
+        <span class="reader-eyebrow-dot">·</span>
+        <span>${escapeHtml(item.category)}</span>
+        ${!isPrompt ? '<span class="reader-eyebrow-dot">·</span><span>Custom GPT</span>' : ''}
+      </div>
+      <div class="reader-actions">
+        ${saveAction}
+        ${primaryAction}
+      </div>
     </div>
   `;
 
@@ -631,37 +653,17 @@ function renderReader() {
 
   const resources = isPrompt ? renderResources(item.sample) : renderCustomGptLink(item);
 
-  const primaryAction = isPrompt
-    ? `<button class="btn btn-primary" type="button" data-action="copy" data-item-id="${escapeAttribute(item.id)}">Copy prompt →</button>`
-    : (item.link
-      ? `<a class="btn btn-primary" href="${escapeAttribute(item.link)}" target="_blank" rel="noreferrer noopener">Open in ChatGPT →</a>`
-      : `<button class="btn btn-primary" type="button" disabled>Link unavailable</button>`);
-
-  const stats = `
-    <div class="reader-stats">
-      <div class="stat-cell">
-        <span class="stat-value">${escapeHtml(String(uses))}</span>
-        <span class="stat-label">Uses</span>
-      </div>
-      <div class="stat-cell">
-        <span class="stat-value">${escapeHtml(String(bodyChars))}</span>
-        <span class="stat-label">Chars</span>
-      </div>
-    </div>
-  `;
-
   const footer = `
     <div class="reader-footer">
-      ${stats}
-      <div class="reader-actions">
-        <button
-          class="btn btn-ghost ${isFav ? 'active' : ''}"
-          type="button"
-          data-action="favorite"
-          data-item-id="${escapeAttribute(item.id)}"
-          aria-pressed="${isFav}"
-        >${isFav ? '♥ Saved' : '♡ Save'}</button>
-        ${primaryAction}
+      <div class="reader-stats">
+        <div class="stat-cell">
+          <span class="stat-value">${escapeHtml(String(uses))}</span>
+          <span class="stat-label">Uses</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-value">${escapeHtml(String(bodyChars))}</span>
+          <span class="stat-label">Chars</span>
+        </div>
       </div>
     </div>
   `;
@@ -671,7 +673,7 @@ function renderReader() {
     : '';
 
   elements.readerArticle.innerHTML = `
-    ${eyebrow}
+    ${topbar}
     <h1 class="reader-title">${escapeHtml(item.title || 'Untitled')}</h1>
     <p class="reader-lede">${escapeHtml(lede)}</p>
     ${tagRow}
