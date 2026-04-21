@@ -1,147 +1,113 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="light">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KP's Prompt Library</title>
+  <title>KP's Prompt Cabinet</title>
   <meta
     name="description"
-    content="Google Sheets로 관리하는 프롬프트 라이브러리를 검색, 복사, 즐겨찾기 중심으로 탐색하는 정적 웹 앱"
+    content="An editorial, reading-first prompt cabinet by Kipeum Lee."
   >
-  <meta name="color-scheme" content="light dark">
   <link
     rel="icon"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2307111a'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial,sans-serif' font-size='28' font-weight='700' fill='%2356f0c4'%3EKP%3C/text%3E%3C/svg%3E"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231a1613'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-style='italic' font-size='34' fill='%23f5f1ea'%3EKP%3C/text%3E%3C/svg%3E"
   >
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/subsets/Paperlogy-dynamic-subset.css"
-    type="text/css"
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
   >
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="./styles.css">
 </head>
-<body>
-  <a href="#content-root" class="skip-link">Skip to prompts</a>
-  <div class="page-shell">
-    <header class="hero panel">
-      <div class="hero-top">
-        <div class="brand-lockup">
-          <div class="brand-mark" aria-hidden="true">KP</div>
-          <div class="brand-copy">
-            <p class="eyebrow">Google Sheets + GitHub Pages</p>
-            <h1 class="brand-title">KP's Prompt Library</h1>
-            <p class="brand-subtitle">
-              프롬프트를 검색, 복사, 즐겨찾기 중심으로 탐색하는 정적 웹 앱.
-            </p>
-          </div>
-        </div>
+<body data-mode="desktop" data-mobile-view="list">
+  <a href="#reader" class="skip-link">Skip to reader</a>
 
-        <div class="hero-actions">
-          <a
-            class="link-button"
-            href="https://github.com/kipeum86"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            GitHub
-          </a>
-          <a
-            class="link-button"
-            href="https://www.linkedin.com/in/kipeumlee/"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            LinkedIn
-          </a>
-          <button id="theme-toggle" class="icon-toggle" type="button" aria-label="다크 모드로 전환" title="다크 모드로 전환">
-            ☾
-          </button>
+  <div class="app">
+    <aside class="rail" role="navigation" aria-label="Library">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><span>KP</span></div>
+        <div class="brand-text">
+          <div class="brand-name">Kipeum Lee</div>
+          <div class="brand-role">Prompt Cabinet</div>
         </div>
       </div>
 
-      <div class="hero-bottom">
-        <p class="brand-subtitle">
-          검색은 모든 카테고리를 대상으로 동작하고, 즐겨찾기와 테마/뷰 상태는 로컬에
-          저장됩니다. 데이터는 Google Sheets에서 직접 가져옵니다.
-        </p>
-        <div id="hero-stats" class="stat-row" aria-live="polite"></div>
+      <div class="rail-search">
+        <input
+          id="search-input"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="search the cabinet…"
+          aria-label="Search prompts"
+        >
+      </div>
+
+      <nav class="rail-categories" id="rail-categories" aria-label="Categories"></nav>
+
+      <div class="rail-spacer"></div>
+
+      <div class="colophon">
+        <div class="colophon-line">Volume 01</div>
+        <div class="colophon-line colophon-line--muted" id="colophon-date"></div>
+      </div>
+    </aside>
+
+    <header class="topbar" role="banner">
+      <div class="topbar-brand">
+        <div class="brand-mark brand-mark--sm" aria-hidden="true"><span>KP</span></div>
+        <div class="brand-text">
+          <div class="brand-name">Kipeum Lee</div>
+          <div class="brand-role">Prompt Cabinet</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <input
+          id="search-input-mobile"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="search…"
+          aria-label="Search prompts"
+          class="topbar-search"
+        >
+        <button
+          type="button"
+          id="menu-chip"
+          class="menu-chip"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <span id="menu-chip-label">All</span>
+          <span class="menu-chip-caret" aria-hidden="true">▾</span>
+        </button>
       </div>
     </header>
 
-    <section class="toolbar panel" aria-label="검색 및 필터">
-      <div class="toolbar-top">
-        <label class="search-shell" for="search-input">
-          <span class="search-label" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M10.5 10.5L13.5 13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <input
-            id="search-input"
-            type="search"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="프롬프트, 설명, GPT 이름, 본문 검색"
-          >
-          <button id="search-clear" class="ghost-button ghost-button--icon" type="button" aria-label="검색어 지우기" title="검색어 지우기" hidden>
-            ×
-          </button>
-        </label>
-
-        <div class="toolbar-actions">
-          <div class="segmented" role="group" aria-label="뷰 전환">
-            <button id="view-card" class="secondary-button" type="button" data-view="card">Card</button>
-            <button id="view-list" class="secondary-button" type="button" data-view="list">List</button>
-          </div>
-
-          <label class="select-shell" for="sort-select">
-            <span>정렬</span>
-            <select id="sort-select">
-              <option value="default">기본</option>
-              <option value="title">이름순</option>
-            </select>
-          </label>
-        </div>
+    <div class="menu-sheet" id="menu-sheet" hidden>
+      <div class="menu-sheet-backdrop" id="menu-sheet-backdrop"></div>
+      <div class="menu-sheet-panel" role="dialog" aria-label="Categories">
+        <nav class="rail-categories" id="menu-sheet-categories" aria-label="Categories"></nav>
       </div>
-
-      <div class="category-tabs-wrap">
-        <div id="category-tabs" class="category-tabs" role="tablist" aria-label="카테고리"></div>
-      </div>
-
-      <div class="toolbar-bottom">
-        <div id="results-summary" class="results-summary">데이터를 불러오는 중입니다...</div>
-        <div id="sub-summary" class="sub-summary"></div>
-      </div>
-    </section>
-
-    <div id="tip-bar" class="tip-bar" hidden>
-      <span>Press <kbd>/</kbd> to search all categories. Favorites are saved in your browser.</span>
-      <button id="tip-dismiss" class="ghost-button ghost-button--icon" type="button" aria-label="Dismiss tip">×</button>
     </div>
 
-    <section id="status-banner" class="status-banner" aria-live="polite"></section>
+    <section class="list-pane" aria-label="Entries">
+      <header class="list-header">
+        <h2 class="list-title" id="list-title">All</h2>
+        <span class="list-count" id="list-count" aria-live="polite"></span>
+      </header>
+      <ol class="list-rows" id="list-rows" role="listbox" aria-label="Prompts"></ol>
+    </section>
 
-    <div id="sr-announce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-
-    <main id="content-root" class="content-root"></main>
-
-    <footer class="footer">
-      <span>© 2023-2026 Kipeum Lee. All rights reserved.</span>
-      <span>Google Sheets 반영에는 최대 5분 정도 지연이 있을 수 있습니다.</span>
-    </footer>
+    <main class="reader" id="reader" role="main">
+      <button type="button" class="reader-back" id="reader-back">← back to list</button>
+      <article class="reader-article" id="reader-article" tabindex="-1"></article>
+    </main>
   </div>
 
-  <button id="scroll-top" class="scroll-top" type="button" aria-label="맨 위로 이동" title="맨 위로 이동">↑</button>
-
-  <dialog id="modal-root" class="modal-dialog" aria-labelledby="modal-title">
-    <button id="modal-close" class="modal-close" type="button" aria-label="닫기">×</button>
-    <div id="modal-body"></div>
-  </dialog>
-
-  <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+  <div class="sr-only" id="sr-announce" aria-live="polite" aria-atomic="true"></div>
+  <div class="toast-root" id="toast-root" aria-live="polite" aria-atomic="true"></div>
 
   <script src="./app.js"></script>
 </body>
